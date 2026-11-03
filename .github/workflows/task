@@ -1,0 +1,55 @@
+from datetime import datetime
+
+class TaskManager:
+    class Task:
+        def __init__(self, id, title, completed, created_at):
+            self.id = id
+            self.title = title
+            self.completed = completed
+            self.created_at = created_at
+
+        def get_id(self):
+            return self.id
+
+        def get_title(self):
+            return self.title
+
+        def is_completed(self):
+            return self.completed
+
+        def set_completed(self, completed):
+            self.completed = completed
+
+        def get_created_at(self):
+            return self.created_at
+
+    def __init__(self):
+        self.tasks = []
+        self.next_id = 1
+        self.date_format = "%Y-%m-%d %H:%M:%S"
+
+    def _get_current_timestamp(self):
+        return datetime.now().strftime(self.date_format)
+
+    def add_task(self, title):
+        if not title or not title.strip():
+            return
+        self.tasks.append(self.Task(self.next_id, title, False, self._get_current_timestamp()))
+        self.next_id += 1
+
+    def complete_task(self, task_id):
+        for t in self.tasks:
+            if t.get_id() == task_id:
+                t.set_completed(True)
+                break
+
+    def remove_task(self, task_id):
+        self.tasks = [t for t in self.tasks if t.get_id() != task_id]
+
+    def list_tasks(self):
+        for t in self.tasks:
+            status = "x" if t.is_completed() else " "
+            print(f"[{status}] {t.get_id()}: {t.get_title()} ({t.get_created_at()})")
+
+    def get_task_count(self):
+        return len(self.tasks)
